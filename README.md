@@ -107,3 +107,13 @@ Esto levantará un servidor RESTful en `http://localhost:3000` que simula una AP
   function deleteChamp(id) {
       // Código para eliminar un personaje específico
   }
+  ```
+  - **Actualizar un personaje**
+
+  ```javascript
+  function updateChamp(id) {
+      // Código para eliminar un personaje específico
+  }
+```
+
+  

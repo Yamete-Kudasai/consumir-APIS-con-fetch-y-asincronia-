@@ -12,7 +12,7 @@ async function createChamp() {
     let powers = prompt("Ingrese los poderes del personaje separados por comas (ejemplo: 'Web-Slinging, Wall-Crawling, Super Strength')");
 
     // Separar los poderes ingresados por , y enviarlo al array
-    let powersArray = powers.split(',').map(power => power.trim()); 
+    let powersArray = powers.split(',').map(power => power.trim());
 
 
     // Recibir los datos de promt y convertiros en objetos
@@ -40,7 +40,7 @@ async function createChamp() {
         console.log("Personaje Creado:", data);
 
         // Actualizar la lista después de crear un nuevo personaje
-        await getChamp(); 
+        await getChamp();
     } catch (error) { //Esto es solo es un mansaje de error que nos dirá si hay un problema al enviar el POST
         console.error("Error al crear el personaje:", error);
     }
@@ -64,7 +64,7 @@ async function deleteChamp(id) {
             console.log(`Personaje con ID ${id} eliminado correctamente.`);
 
             // Actualizar la lista de personajes después de eliminar
-            await getChamp(); 
+            await getChamp();
         } else {
             console.error(`Error al eliminar el personaje con ID ${id}.`);
         }
@@ -94,7 +94,7 @@ async function getChamp() {
 
         // Creamos una variable para se lecionar el ID que le pusimos a la lista UL en el index.html
         let listContainer = document.getElementById('champList');
-        
+
         // Aquí le decimos que borre todo lo que hay dentro del UL para evitar que se muestre el LI que tenemos creado epor defecto en nuestro HTML
         listContainer.innerHTML = '';
 
@@ -107,7 +107,7 @@ async function getChamp() {
             listItem.classList.add('w-full', 'justify-center', 'items-center', 'flex');
 
             // Añadir el ID al LI
-            listItem.setAttribute('data-id', champ.id); 
+            listItem.setAttribute('data-id', champ.id);
 
             // Ahora aquí creamos la plantilla de cada uno de los LI y le asignamos a cada uno de los espacios que queremos que aparezcan los datos con el poerador ${data. EL VALOR DE LA JSON QUE NECESITAS}
             listItem.innerHTML = `
@@ -129,10 +129,11 @@ async function getChamp() {
                     <p>${champ.powers.join(', ')}</p>
                 </div>
                 <div class="noame w-[17%] justify-center items-center flex flex-col">
-                    <button class="btnDelete rounded py-4 px-6 bg-red-600 text-white font-bold">Borrar</button>
-                </div>
+                    <button class="btnDelete rounded py-4 px-6 bg-red-600 text-white font-bold w-full flex text-center justify-center my-2">Borrar</button>
+                 <button class="btnUpdate rounded py-4 px-6 bg-green-600 text-white font-bold w-full flex text-center justify-center my-2">Actualizar</button>
+                    </div>
             </div>`;
-            
+
             // Aqui le decimos que cada contaner que cree lo mande a al listItem
             listContainer.appendChild(listItem);
         });
@@ -146,18 +147,81 @@ async function getChamp() {
             button.addEventListener('click', async (e) => {
 
                 // Obtener el 'li' más cercano
-                let liElement = e.target.closest('li'); 
+                let liElement = e.target.closest('li');
 
                 // Obtener el ID del 'data-id'
-                let champId = liElement.getAttribute('data-id'); 
+                let champId = liElement.getAttribute('data-id');
 
                 // Llamar a la función para eliminar el personaje
-                await deleteChamp(champId); 
+                await deleteChamp(champId);
+            });
+        });
+
+        // Selecionamos el boton que hay en el con la clase .btnUpdate lo hacemos con querySelectorAll para que seleccione todos los botones que aparezcan
+        let updateButtons = document.querySelectorAll('.btnUpdate');
+
+         // Añadir evento de click a los botones de eliminacion
+        updateButtons.forEach(button => {
+            button.addEventListener('click', async (e) => {
+
+                // Obtener el 'li' más cercano
+                let liElement = e.target.closest('li');
+
+                // Obtener el ID del 'data-id'
+                let champId = liElement.getAttribute('data-id');
+
+                // Llamar a la función para actualizar el personaje
+                await updateChamp(champId);
             });
         });
 
     } catch (error) {
         console.error("Error al obtener la lista de personajes:", error);
+    }
+
+    
+}
+
+async function updateChamp(id) {
+    
+     // Obtener los datos actuales del personaje de la API
+     let response = await fetch(`${apiMarvel}/${id}`);
+     let champ = await response.json();
+
+    let newName = prompt("Ingrese el nuevo nombre del personaje:", champ.name);
+    let newAlias = prompt("Ingrese el nuevo alias del personaje:", champ.alias);
+    let newFirstAppearance = prompt("Ingrese el nuevo año de la primera aparición del personaje:");
+    let newPowers = prompt("Ingrese los nuevos poderes del personaje separados por comas (ejemplo: 'Web-Slinging, Wall-Crawling, Super Strength')");
+
+    // Convertir la cadena de poderes en un array
+    let newPowersArray = newPowers.split(',').map(power => power.trim());
+
+    // Crear el objeto con los datos actualizados
+    let updatedChamp = {
+        name: newName,
+        alias: newAlias,
+        firstAppearance: newFirstAppearance,
+        powers: newPowersArray
+    };
+
+    try {
+        // Hacer la petición PUT para actualizar el personaje
+        let response = await fetch(`${apiMarvel}/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(updatedChamp)
+        });
+
+        if (response.ok) {
+            console.log(`Personaje con ID ${id} actualizado correctamente.`);
+            getChamp(); // Actualiza la lista de personajes después de la edición
+        } else {
+            console.error(`Error al actualizar el personaje con ID ${id}.`);
+        }
+    } catch (error) {
+        console.error("Error al intentar actualizar el personaje:", error);
     }
 }
 
