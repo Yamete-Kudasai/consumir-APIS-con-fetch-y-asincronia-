@@ -36,7 +36,7 @@ npm install -g json-server
 
 ### 1. Configurar en package.json un script para ejecutar json server 
 
-En la terminal, dentro de la carpeta del proyecto, ejecuta el siguiente comando para iniciar `JSON Server`:
+Vamos aconfigurar nuestro script en el package.json para ejecutarlo con npm run server :
 
 ```bash
 {
