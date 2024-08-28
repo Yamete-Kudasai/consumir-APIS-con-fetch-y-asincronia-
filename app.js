@@ -1,229 +1,320 @@
 // API
-let apiMarvel = "http://localhost:3000/marvelChamps";
+let API_URL = "http://localhost:5000/personajes"
 
-// Boton para agregar
-let buttonAdd = document.getElementById('btnAdd');
+// establecemos una varibale para ID en null para que este sea su valor inicial
+let personajeID = null;
 
-// Función para crear un nuevo personaje
-async function createChamp() {
-    let name = prompt("Ingrese el nombre del personaje:");
-    let alias = prompt("Ingrese el alias del personaje:");
-    let firstAppearance = prompt("Ingrese el año de la primera aparición del personaje:");
-    let powers = prompt("Ingrese los poderes del personaje separados por comas (ejemplo: 'Web-Slinging, Wall-Crawling, Super Strength')");
+// seleccionamos todo lo que vamos a necesitar como el input para buscar, el formulario y los botones
+let form = document.getElementById('formCreateUpdate')
 
-    // Separar los poderes ingresados por , y enviarlo al array
-    let powersArray = powers.split(',').map(power => power.trim());
+let botonGuardar = document.getElementById("btnSave")
+
+let botonAdd = document.getElementById("btnAdd")
+
+let botonCancelar = document.getElementById("btnClose")
+
+let searchBard = document.getElementById("searchBard")
 
 
-    // Recibir los datos de promt y convertiros en objetos
-    let newChamp = {
+// FUNCION PARA MOSTRAR ELEMENTOS DE LA BASE DE DATOS
+async function mostrarLista() {
+
+    // Utilizamos tryCatch para manejar los errores
+    try {
+        // Creamos una variable response para hacer nuestra petición con fetch
+        // Fetch funciona de la siguiente manera en el caso de mostrar: fetch(URLDELAAPI,{ METODO A UTILIZAR, EN ESTE CASO ES GET })
+        let response = await fetch(API_URL, {
+            method: "GET"
+        });
+
+        // creamos una varible en la cual vamos a convertir los datos de response a json
+        let data = await response.json()
+
+        // le damos una variable al input que usaremos para buscar
+        let searchInput = document.getElementById('inputSearch');
+
+        // Creamos un validador para para que la lista se actualice segun lo que haya en el input de buscar
+        if (searchInput) {
+            // aqui le decimos que tendrá un evento input y que al pasar algun dato dentro se elecute la funcion mostrarLista
+            searchInput.addEventListener('input', mostrarLista);
+        }
+        // aqui le damos un valdiador con un operador ternario donde le decimos que el input va a tener como valor lo ingresado y sino tiene nada que lo deje vacio, tenemos que hacer esto para que no nos salga un error undefined cuando el input este vacio, esto provoca que se muestren todos los elementos
+        let query = searchInput ? searchInput.value.toLowerCase() : ''
+
+        // Seleccionamos el lugar donde se van a ingresar cada uno de los datos en formato de lista, en este casi seleccionamos el UL que tenemos en el html con el ID list
+        let listado = document.getElementById("list")
+
+        // Ahora le decimos al listado que borre todo lo que tenga adentro para que el UL quede vacio
+        listado.innerHTML = ''
+
+        // aqui una variable en la cual vamos a recorrer los datos con el metodo filter para que así luego podamos usar nuestra barra de busqueda, entonces lo que le decimos al filter es que recorra todo el array  y que cada uno de los objetos se lamarán personaje
+        let personajeFiltrado = data.filter(personaje => {
+
+            // Validar que cada propiedad exista antes de usar toLowerCase() y le decimos que en caso tañ que no tega nada que el vamor sea vacio
+            const name = personaje.name ? personaje.name.toLowerCase() : '';
+            const alias = personaje.alias ? personaje.alias.toLowerCase() : '';
+            const firstAppearance = personaje.firstAppearance ? personaje.firstAppearance.toLowerCase() : '';
+            // En este elemento lo que hacemos es decirle a los poderes que se separen con una comy un espacio y que en caso tal de que no tengamos nada que sean vacios
+            const powers = personaje.powers ? personaje.powers.join(", ").toLowerCase() : '';
+
+            // Filtrar si alguna de las propiedades coincide con la consulta
+            return name.includes(query) || alias.includes(query) || firstAppearance.includes(query) || powers.includes(query);
+        })
+
+        // Aqui vamos a recorrer el filtro que creamos anteriror mente para que me cree cada uno de los elementos de la lista
+        personajeFiltrado.map((personaje) => {
+            // creamos una variable que va a crear un elemento LI por cada uno de los objetos del array
+            let item = document.createElement('li')
+
+            // Ahora le damos estilos a LI
+            item.classList.add("itemList", "w-full", "flex", "flex-col", "justify-center", "items-center", "mb-5")
+
+            // Despues con innerHTML creamos la plantilla de nuestro elemento y con el operador ${} llamamos el dato que queremos traer del personaje
+            item.innerHTML = `
+            <div class="rounded-2xl border w-full max-lg:py-4 min-h-12 flex flex-wrap justify-between p-4 m-4 shadow-md text-center">
+                    <div class="flex flex-col max-lg:w-full lg:w-[25%] gap-5">
+                        <h3 class="font-bold text-md text-center">Nombre</h3>
+                        <p class"" data-names >${personaje.name}</p>
+                    </div>
+                    <div class="flex flex-col max-lg:w-full lg:w-[25%] gap-5">
+                        <h3 class="font-bold text-md text-center">Nombre de héroe</h3>
+                        <p>${personaje.alias}</p>
+                    </div>
+                    <div class="flex flex-col max-lg:w-full lg:w-[25%] gap-5">
+                        <h3 class="font-bold text-md text-center">Aparición</h3>
+                        <p class"">${personaje.firstAppearance}</p>
+                    </div>
+                    <div class="flex flex-col max-lg:w-full lg:w-[25%] gap-5">
+                        <h3 class="font-bold text-md text-center">Poderes</h3>
+                        <p class"">${personaje.powers.join(", ")}</p>
+                    </div>
+                    <div class="noame w-full max-lg:py-4 mt-10 justify-center items-center flex ">
+                        <button onclick="eliminar('${personaje.id}')" class="btnDelete rounded-2xl mx-2 py-4 px-6 bg-red-600 text-white font-bold w-full flex text-center justify-center my-2">Borrar</button>
+                    <button  class="btnUpdate rounded-2xl mx-2 py-4 px-6 bg-green-600 text-white font-bold w-full flex text-center justify-center my-2">Actualizar</button>
+                        </div>
+                </div>
+            `;
+
+            // Aquí haremos una validacion para irganice la lista de forma descentende
+            if (listado.firstChild) {
+                // aui le decimos que agregue el item al principio de la lista así los ultimos serán primero y cuando creemos un nuevo se vea de primero en la lista
+                listado.insertBefore(item, listado.firstChild);
+            }
+            // Aqui le decimos que agregue el item
+            else {
+                listado.appendChild(item); // Si la lista está vacía, simplemente añade el elemento
+            }
+
+            // Aquí daremos la funcion al boton actualizar 
+            item.querySelector('.btnUpdate').addEventListener('click', (e) => {
+                // Prevenimos el comportamiento por defecto del boton
+                e.preventDefault()
+
+                // Aqui le asignamos un ID a la variable perosnajeID
+                personajeID = personaje.id
+
+                // Aquí le decimos que tome los tados que estamos trayendo del formulario (esto lo confugaremos más abajo ASÍ QUE TRNAQUILO SI ESTE NO LO ENTEINDES AUN) basicamente le decimos que ejecute esa funcion pero con los datos del persoanje
+                personajeForm(personaje)
+
+                // con esto le decimos que oculte el boton de agregar, añadiendo la clase hidden
+                botonAdd.classList.add('hidden')
+
+                // con esto le decimos que muestre el formulario, removiendo la clase hidden
+                form.classList.remove('hidden')
+
+                // con esto le decimos que oculte el listado UL, añadiendo la clase hidden
+                listado.classList.add('hidden')
+
+                //// con esto le decimos que oculte la bara de busqueda, añadiendo la clase hidden
+                searchBard.classList.add("hidden")
+
+            })
+        })
+
+
+    } catch (error) {
+        console.log("erro al botener la lista de personajes", error)
+
+    }
+
+
+}
+
+// inicializamos la función para que se muestre la lista
+mostrarLista()
+
+// FUNCION PARA ELEMENTOS ELEMENTOS DE LA BASE DE DATOS
+async function eliminar(id) {
+    // Utilizamos tryCatch para manejar los errores
+    try {
+        // Creamos una variable response para hacer nuestra petición con fetch
+        // Fetch funciona de la siguiente manera en el caso de eliminar: fetch(`URLDELAAPI/${id}`{ METODO A UTILIZAR, EN ESTE CASO ES DELETE })
+        let response = await fetch(`${API_URL}/${id}`, {
+            method: "DELETE"
+        });
+
+        // validamos para que ejecute un funcion en caso de que la respuesta sea OK y que nos muestre un error en caso de que no se cumpla
+        if (response.ok) {
+            console.log(`Personaje con id ${id} eliminado correctamente`);
+            await mostrarLista();
+        } else {
+            console.log("Error al eliminar el personaje");
+        }
+    } catch (error) {
+        console.log("error al eliminar", error);
+    }
+}
+
+// Funcion para capturar los datos al CREAR un personaje y tambien MOSTRAR los datos cuando vayammos a actulizar (ESTA ES LA QUE UTILIZAMOS EN LA LINEA 117)
+function personajeForm(personaje) {
+    document.getElementById('inputName').value = personaje.name;
+    document.getElementById('inputAlias').value = personaje.alias;
+    document.getElementById('inputAppearance').value = personaje.firstAppearance;
+    document.getElementById('inputPowers').value = personaje.powers.join(', ');
+}
+
+
+
+// FUNCION PARA CREAR Y ACTUALIZAR ELEMENTOS DE LA BASE DE DATOS
+async function CrearActualizarItem() {
+
+    //Caputramos los datos de los imputs del formulario con .value y le agregamos .trim() para que elimine los espacios que pongan al inicio
+    let name = document.getElementById('inputName').value.trim();
+    let alias = document.getElementById('inputAlias').value.trim();
+    let firstAppearance = document.getElementById('inputAppearance').value.trim();
+    let powers = document.getElementById('inputPowers').value.trim();
+
+
+    // con estos if lo que haremos es valdiar que ingresen los datos
+    if (!name) {
+        alert("Por favor, ingrese el nombre");
+        return;  // Detener la ejecución si 'name' está vacío
+    }
+
+    if (!alias) {
+        alert("Por favor, ingrese el alias.");
+        return;  // Detener la ejecución si 'alias' está vacío
+    }
+    if (!firstAppearance) {
+        alert("Por favor, ingrese su primer aparición.");
+        return;  // Detener la ejecución si 'firstAppearance' está vacío
+    }
+    if (!powers) {
+        alert("Por favor, ingrese sus poderes.");
+        return;  // Detener la ejecución si 'powers' está vacío
+    }
+
+    // Separar los poderes ingresados por ',' y enviarlo al array
+    let powersArray = powers ? powers.split(',').map(power => power.trim()) : [];
+
+
+    // creamos un objeto que recibirá los datos organizados de forma correta para enviarlo a nustra base de datos
+    let dataPersonaje = {
         name: name,
         alias: alias,
         firstAppearance: firstAppearance,
         powers: powersArray
     };
-
-    // Metodo para CREAR una nueva entrada en la base de datos
+    // Utilizamos tryCatch para manejar los errores
     try {
-        let response = await fetch(apiMarvel, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+        // creamos la variable response donde se hara el fetch
+        let response;
 
-            // Aquí estoy recibiendo los datos de del nuevo personaje
-            body: JSON.stringify(newChamp)
-        });
+        // creamos el validador para que ejecute la funcion de actualizar en caso de que tengamos un ID almacenado en personajeID
+        if (personajeID) {
 
-        // Establece una clase para imprimir la data en un console.log (esto es pocional)
-        let data = await response.json();
-        console.log("Personaje Creado:", data);
 
-        // Actualizar la lista después de crear un nuevo personaje
-        await getChamp();
-    } catch (error) { //Esto es solo es un mansaje de error que nos dirá si hay un problema al enviar el POST
-        console.error("Error al crear el personaje:", error);
-    }
-}
+             // Fetch funciona de la siguiente manera en el caso de ACTUALIZAR: fetch(`URLDELAAPI/${id}`{ METODO A UTILIZAR, EN ESTE CASO ES PUT })
+            response = await fetch(`${API_URL}/${personajeID}`, {
+                method: "PUT",
+                
+                // Con esto le decimos que le vamos a enviar un JSON el cual está almacenado en dataPersonaje
+                body: JSON.stringify(dataPersonaje)
+            });
 
-// Función para eliminar un personaje la usames más adelante le creamos un props que recibirá en ID
-async function deleteChamp(id) {
+            // Asignamos una variable a nuestros datos actualizados
+            let updateData = await response.json();
+            // imprimimos un mensaje 
+            console.log(`Personaje actualizado: ${updateData}`);
+        } 
+        // Este else se ejecutará en caso tal de que no haya un ID en personaje ID
+        else {
+             // Fetch funciona de la siguiente manera en el caso de CREAR: fetch(URLDELAAPI{ METODO A UTILIZAR, EN ESTE CASO ES POST })
+            response = await fetch(API_URL, {
+                method: "POST",
+                // Con esto le decimos que le vamos a enviar un JSON el cual está almacenado en dataPersonaje
+                body: JSON.stringify(dataPersonaje)
+            });
 
-    // el try catch es para decirle que en caso que de que funcion o en caso de error haga una cosa o la otra
-    try {
-        // Creamos una varaible response y con fetch le decimos con `` basticks o como se llamen, que la url es igual a ApiMarvel / y el ID que le mandaremos luego
-        let response = await fetch(`${apiMarvel}/${id}`, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-
-        // Creamos un if para que cuando la respuesta de la funcion eliminar sea OK que impmrima ejecute la funcion que queremos como consol.log y que muestre los personajes
-        if (response.ok) {
-            console.log(`Personaje con ID ${id} eliminado correctamente.`);
-
-            // Actualizar la lista de personajes después de eliminar
-            await getChamp();
-        } else {
-            console.error(`Error al eliminar el personaje con ID ${id}.`);
         }
 
-    } catch (error) {
-        console.error("Error al intentar eliminar el personaje:", error);
-    }
-}
-
-// Aqui estamos escuando al boton para ejecutar la funcion para crear un nuevo personaje
-buttonAdd.addEventListener('click', createChamp);
-
-
-// Función para obtener la lista de personajes
-async function getChamp() {
-
-    // Metodo para OBTENER todas las entradas en la base de datos
-    try {
-        let response = await fetch(apiMarvel, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-        // Creamos la variable data para almacenar lo que nos trae el GET a traves de la variable response
-        let data = await response.json();
-
-        // Creamos una variable para se lecionar el ID que le pusimos a la lista UL en el index.html
-        let listContainer = document.getElementById('champList');
-
-        // Aquí le decimos que borre todo lo que hay dentro del UL para evitar que se muestre el LI que tenemos creado epor defecto en nuestro HTML
-        listContainer.innerHTML = '';
-
-        // Selecionamos la variable data donde almacenamos la respuesta que nos trajo el response y lo recorremos con .map  y le ponemos un Props llamado Champ para obtener cada uno de los elementos de la base de datos, en este caso nuestro archivo db.json
-        data.map((champ) => {
-            // Creamos una variable paara crear un LI por cada objeto que traiga
-            let listItem = document.createElement('li');
-
-            // L damos clases al LI para que se vea como queremos
-            listItem.classList.add('w-full', 'justify-center', 'items-center', 'flex');
-
-            // Añadir el ID al LI
-            listItem.setAttribute('data-id', champ.id);
-
-            // Ahora aquí creamos la plantilla de cada uno de los LI y le asignamos a cada uno de los espacios que queremos que aparezcan los datos con el poerador ${data. EL VALOR DE LA JSON QUE NECESITAS}
-            listItem.innerHTML = `
-            <div class="rounded border w-4/5 min-h-12 flex justify-between p-4">
-                <div class="flex flex-col w-[17%]">
-                    <h3 class="font-bold text-xl">Nombre</h3>
-                    <p>${champ.name}</p>
-                </div>
-                <div class="noame w-[17%] justify-center flex-col">
-                    <h3 class="font-bold text-xl">Nombre de héroe</h3>
-                    <p>${champ.alias}</p>
-                </div>
-                <div class="noame w-[17%] justify-center flex-col">
-                    <h3 class="font-bold text-xl">Aparición</h3>
-                    <p>${champ.firstAppearance}</p>
-                </div>
-                <div class="noame w-[17%] justify-center flex-col">
-                    <h3 class="font-bold text-xl">Poderes</h3>
-                    <p>${champ.powers.join(', ')}</p>
-                </div>
-                <div class="noame w-[17%] justify-center items-center flex flex-col">
-                    <button class="btnDelete rounded py-4 px-6 bg-red-600 text-white font-bold w-full flex text-center justify-center my-2">Borrar</button>
-                 <button class="btnUpdate rounded py-4 px-6 bg-green-600 text-white font-bold w-full flex text-center justify-center my-2">Actualizar</button>
-                    </div>
-            </div>`;
-
-            // Aqui le decimos que cada contaner que cree lo mande a al listItem
-            listContainer.appendChild(listItem);
-        });
-
-        // Selecionamos el boton que hay en el con la clase .btnDelete lo hacemos con querySelectorAll para que seleccione todos los botones que aparezcan
-        let deleteButtons = document.querySelectorAll('.btnDelete');
-
-
-        // Añadir evento de click a los botones de eliminacion
-        deleteButtons.forEach(button => {
-            button.addEventListener('click', async (e) => {
-
-                // Obtener el 'li' más cercano
-                let liElement = e.target.closest('li');
-
-                // Obtener el ID del 'data-id'
-                let champId = liElement.getAttribute('data-id');
-
-                // Llamar a la función para eliminar el personaje
-                await deleteChamp(champId);
-            });
-        });
-
-        // Selecionamos el boton que hay en el con la clase .btnUpdate lo hacemos con querySelectorAll para que seleccione todos los botones que aparezcan
-        let updateButtons = document.querySelectorAll('.btnUpdate');
-
-         // Añadir evento de click a los botones de eliminacion
-        updateButtons.forEach(button => {
-            button.addEventListener('click', async (e) => {
-
-                // Obtener el 'li' más cercano
-                let liElement = e.target.closest('li');
-
-                // Obtener el ID del 'data-id'
-                let champId = liElement.getAttribute('data-id');
-
-                // Llamar a la función para actualizar el personaje
-                await updateChamp(champId);
-            });
-        });
-
-    } catch (error) {
-        console.error("Error al obtener la lista de personajes:", error);
-    }
-
-    
-}
-
-async function updateChamp(id) {
-    
-     // Obtener los datos actuales del personaje de la API
-     let response = await fetch(`${apiMarvel}/${id}`);
-     let champ = await response.json();
-
-    let newName = prompt("Ingrese el nuevo nombre del personaje:", champ.name);
-    let newAlias = prompt("Ingrese el nuevo alias del personaje:", champ.alias);
-    let newFirstAppearance = prompt("Ingrese el nuevo año de la primera aparición del personaje:");
-    let newPowers = prompt("Ingrese los nuevos poderes del personaje separados por comas (ejemplo: 'Web-Slinging, Wall-Crawling, Super Strength')");
-
-    // Convertir la cadena de poderes en un array
-    let newPowersArray = newPowers.split(',').map(power => power.trim());
-
-    // Crear el objeto con los datos actualizados
-    let updatedChamp = {
-        name: newName,
-        alias: newAlias,
-        firstAppearance: newFirstAppearance,
-        powers: newPowersArray
-    };
-
-    try {
-        // Hacer la petición PUT para actualizar el personaje
-        let response = await fetch(`${apiMarvel}/${id}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(updatedChamp)
-        });
-
-        if (response.ok) {
-            console.log(`Personaje con ID ${id} actualizado correctamente.`);
-            getChamp(); // Actualiza la lista de personajes después de la edición
-        } else {
-            console.error(`Error al actualizar el personaje con ID ${id}.`);
+        // Este validador nos dirá que en caso contrario de que la respuesta sea OK que nos cree un error y nos responda el status de response 
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
         }
+
+        // Una vez se cumpla una de las dos funciones anteriores que actualice la lista
+        await mostrarLista()
+
+        // una vez se envie el formulario eliminará el valor almacenado del personaje
+        personajeID = null;
+
+        // UNa vez se envia reseteamos el formulario para que quede en blanco
+        form.reset()
+
+        alert('Personaje guardado con éxito.');
+
     } catch (error) {
-        console.error("Error al intentar actualizar el personaje:", error);
+        console.log("Error al Crear o actualizar el personaje:", error)
+        alert("Hubo un problema al guardar el personaje. Por favor, intente de nuevo.");
     }
 }
 
-// Obtener la lista de personajes al cargar la página
-getChamp();
+
+// agregamos el evento al boton para que muestre el formulario y oculte la lista
+botonAdd.addEventListener('click', (e) => {
+    // Con esto evitamos que el boto reinicie la web al darle clic
+    e.preventDefault()
+// le decimos que muestre el formulario quitandole la clase hidden
+    form.classList.remove('hidden');
+
+    // ahora que oculte el boton añadir, agregando la clase hidden
+    botonAdd.classList.add('hidden');
+    // ahora seleccionamos la lista UL y la ocultamos agregando el hidden
+    document.getElementById('list').classList.add('hidden');
+
+    // ocultamos la barra de busqueda agregando hidden
+    searchBard.classList.add("hidden")
+
+})
+
+// Evento para el botono cancelar (BASICAMENTE REVERTIMOS QUE LE DIJIMOS EN EL BOTON AÑADIR LO QUE HAY CON REMOVE LO CAMBIAMOS A ADD Y LO DE ADD A REMOVE)
+botonCancelar.addEventListener('click', (e) => {
+    // Con esto evitamos que el boto reinicie la web al darle clic
+    e.preventDefault()
+
+    document.getElementById("formCreateUpdate").classList.add('hidden');
+    botonAdd.classList.remove('hidden');
+    document.getElementById('list').classList.remove('hidden');
+    searchBard.classList.remove("hidden")
+})
+
+// Agergamos el evento para guardar crear o actualizar
+botonGuardar.addEventListener('click', (e) => {
+    // Con esto evitamos que el boto reinicie la web al darle clic
+    e.preventDefault()
+
+    // cuando den clic se ejecutará esta funcion de crear y actualizar
+    CrearActualizarItem()
+
+    // y luego volvemos a mostrar la lista, el la barra de busqueda  el boton de añadir y oculte el formulario
+    document.getElementById("formCreateUpdate").classList.add('hidden');
+    botonAdd.classList.remove('hidden');
+    document.getElementById('list').classList.remove('hidden');
+    searchBard.classList.remove("hidden")
+
+
+})
+
+
+

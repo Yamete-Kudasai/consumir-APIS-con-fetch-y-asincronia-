@@ -1,105 +1,213 @@
 {
-  "marvelChamps": [
+  "personajes": [
     {
-      "name": "Steve Rogers",
-      "alias": "Captain America",
-      "firstAppearance": "Captain America Comics #1",
+      "id": "1",
+      "name": "Spider-Man",
+      "alias": "Peter Parker",
+      "firstAppearance": "1962",
       "powers": [
-        "Superhuman strength",
-        "Enhanced agility",
-        "Master tactician"
-      ],
-      "id": "fa73"
-    },
-    {
-      "name": "Natasha Romanoff",
-      "alias": "Black Widow",
-      "firstAppearance": "Tales of Suspense #52",
-      "powers": [
-        "Expert martial artist",
-        "Espionage skills",
-        "Enhanced agility"
-      ],
-      "id": "6e99"
-    },
-    {
-      "name": "Thor",
-      "alias": "Thor",
-      "firstAppearance": "Journey into Mystery #83",
-      "powers": [
-        "Superhuman strength",
-        "Control over lightning",
-        "Flight",
-        "Immortality"
-      ],
-      "id": "0f1e"
-    },
-    {
-      "name": "Bruce Banner",
-      "alias": "Hulk",
-      "firstAppearance": "The Incredible Hulk #1",
-      "powers": [
-        "Superhuman strength",
-        "Regeneration",
-        "Durability",
-        "Size and strength increase with anger"
-      ],
-      "id": "12a8"
-    },
-    {
-      "name": "Wade Wilson",
-      "alias": "Deadpool",
-      "firstAppearance": "New Mutants #98",
-      "powers": [
-        "Regenerative healing factor",
-        "Master martial artist",
-        "Expert marksman",
-        "Immortality"
-      ],
-      "id": "086b"
-    },
-    {
-      "name": "Scott Summers",
-      "alias": "Cyclops",
-      "firstAppearance": "X-Men #1",
-      "powers": [
-        "Optic blasts",
-        "Expert tactician",
-        "Leadership skills"
-      ],
-      "id": "1fa9"
-    },
-    {
-      "name": "Jean Grey",
-      "alias": "Phoenix",
-      "firstAppearance": "X-Men #1",
-      "powers": [
-        "Telepathy",
-        "Telekinesis",
-        "Molecular manipulation",
-        "Flight"
-      ],
-      "id": "6346"
-    },
-    {
-      "name": "T'Challa",
-      "alias": "Black Panther",
-      "firstAppearance": "Fantastic Four #52",
-      "powers": [
-        "Enhanced strength and agility",
-        "Vibranium suit",
-        "Expert hand-to-hand combatant"
-      ],
-      "id": "cae0"
-    },
-    {
-      "id": "59b7",
-      "name": "don juan",
-      "alias": "mr albañil",
-      "firstAppearance": "1600",
-      "powers": [
-        "tomar pola"
+        "Web-Slinging",
+        "Wall-Crawling",
+        "Super Strength"
       ]
+    },
+    {
+      "id": "2",
+      "name": "Iron Man",
+      "alias": "Tony Stark",
+      "firstAppearance": "1963",
+      "powers": [
+        "Genius-Level Intellect",
+        "Powered Armor Suit",
+        "Energy Repulsors"
+      ]
+    },
+    {
+      "id": "3",
+      "name": "Captain America",
+      "alias": "Steve Rogers",
+      "firstAppearance": "1941",
+      "powers": [
+        "Super Strength",
+        "Enhanced Agility",
+        "Expert Tactician"
+      ]
+    },
+    {
+      "id": "4",
+      "name": "Thor",
+      "alias": "Thor Odinson",
+      "firstAppearance": "1962",
+      "powers": [
+        "God of Thunder",
+        "Superhuman Strength",
+        "Mjolnir"
+      ]
+    },
+    {
+      "id": "5",
+      "name": "Hulk",
+      "alias": "Bruce Banner",
+      "firstAppearance": "1962",
+      "powers": [
+        "Super Strength",
+        "Invulnerability",
+        "Regeneration"
+      ]
+    },
+    {
+      "id": "6",
+      "name": "Black Widow",
+      "alias": "Natasha Romanoff",
+      "firstAppearance": "1964",
+      "powers": [
+        "Expert Combatant",
+        "Espionage",
+        "Enhanced Physiology"
+      ]
+    },
+    {
+      "id": "7",
+      "name": "Doctor Strange",
+      "alias": "Stephen Strange",
+      "firstAppearance": "1963",
+      "powers": [
+        "Master of the Mystic Arts",
+        "Sorcery",
+        "Teleportation"
+      ]
+    },
+    {
+      "id": "8",
+      "name": "Wolverine",
+      "alias": "Logan",
+      "firstAppearance": "1974",
+      "powers": [
+        "Regeneration",
+        "Adamantium Claws",
+        "Enhanced Senses"
+      ]
+    },
+    {
+      "id": "9",
+      "name": "Black Panther",
+      "alias": "T'Challa",
+      "firstAppearance": "1966",
+      "powers": [
+        "Superhuman Strength",
+        "Agility",
+        "Vibranium Suit"
+      ]
+    },
+    {
+      "id": "10",
+      "name": "Ant-Man",
+      "alias": "Scott Lang",
+      "firstAppearance": "1979",
+      "powers": [
+        "Size Manipulation",
+        "Super Strength",
+        "Insect Communication"
+      ]
+    },
+    {
+      "id": "11",
+      "name": "Daredevil",
+      "alias": "Matt Murdock",
+      "firstAppearance": "1964",
+      "powers": [
+        "Enhanced Senses",
+        "Expert Martial Artist",
+        "Radar Sense"
+      ]
+    },
+    {
+      "id": "12",
+      "name": "Silver Surfer",
+      "alias": "Norrin Radd",
+      "firstAppearance": "1966",
+      "powers": [
+        "Cosmic Awareness",
+        "Super Strength",
+        "Energy Manipulation"
+      ]
+    },
+    {
+      "id": "14",
+      "name": "Vision",
+      "alias": "Vision",
+      "firstAppearance": "1968",
+      "powers": [
+        "Density Control",
+        "Flight",
+        "Energy Beams"
+      ]
+    },
+    {
+      "id": "16",
+      "name": "Iron Fist",
+      "alias": "Danny Rand",
+      "firstAppearance": "1974",
+      "powers": [
+        "Martial Arts Mastery",
+        "Chi Manipulation",
+        "Iron Fist"
+      ]
+    },
+    {
+      "id": "20",
+      "name": "Star-Lord",
+      "alias": "Peter Quill",
+      "firstAppearance": "1976",
+      "powers": [
+        "Expert Pilot",
+        "Enhanced Durability",
+        "Weapon Proficiency"
+      ]
+    },
+    {
+      "id": "21",
+      "name": "Groot",
+      "alias": "Groot",
+      "firstAppearance": "1960",
+      "powers": [
+        "Regeneration",
+        "Plant Manipulation",
+        "Size Alteration"
+      ]
+    },
+    {
+      "id": "22",
+      "name": "Rocket Raccoon",
+      "alias": "Rocket Raccoon",
+      "firstAppearance": "1976",
+      "powers": [
+        "Expert Marksman",
+        "Enhanced Intelligence",
+        "Mechanical Genius"
+      ]
+    },
+    {
+      "id": "23",
+      "name": "Mantis",
+      "alias": "Mantis",
+      "firstAppearance": "1973",
+      "powers": [
+        "Empathy",
+        "Enhanced Agility",
+        "Martial Arts"
+      ]
+    },
+    {
+      "name": "Nebula",
+      "alias": "Nebula",
+      "firstAppearance": "1985",
+      "powers": [
+        "Cybernetic Enhancements",
+        "Skilled Combatant",
+        "Space Travel"
+      ],
+      "id": "24"
     }
   ]
 }

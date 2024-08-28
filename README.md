@@ -1,8 +1,6 @@
-Aquí tienes todo el contenido en formato Markdown (`.md`):
-
 # Consumir API de forma fácil con fetch de y asincronía
 
-Este proyecto es una simple aplicación web que gestiona una lista de personajes de Marvel. Utiliza `JSON Server` como API REST simulada para crear, leer, actualizar y eliminar personajes.
+Este proyecto es una simple aplicación web que gestiona una lista de personajes de Marvel. Utiliza `JSON Server` como API REST simulada para crear, leer, actualizar y eliminar personajes, además utilizaremos TAILWIND con su CDN para estilizar nuestro front.
 
 ## Requisitos previos
 
@@ -36,7 +34,7 @@ npm install -g json-server
 
 ### 1. Configurar en package.json un script para ejecutar json server 
 
-Vamos aconfigurar nuestro script en el package.json para ejecutarlo con npm run server :
+Vamos aconfigurar nuestro script en el package.json para ejecutarlo con npm run api :
 
 ```bash
 {
@@ -45,7 +43,7 @@ Vamos aconfigurar nuestro script en el package.json para ejecutarlo con npm run 
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "server": "json-server --watch server/db.json"
+    "api": "json-server --watch server/db.json --port 5000"
   },
   "keywords": [],
   "author": "",
@@ -62,10 +60,10 @@ Vamos aconfigurar nuestro script en el package.json para ejecutarlo con npm run 
 En la terminal, dentro de la carpeta del proyecto, ejecuta el siguiente comando para iniciar `JSON Server`:
 
 ```bash
-npm run server
+npm run api
 ```
 
-Esto levantará un servidor RESTful en `http://localhost:3000` que simula una API con la base de datos del archivo `db.json`.
+Esto levantará un servidor RESTful en `http://localhost:5000` que simula una API con la base de datos del archivo `db.json`.
 
 ## Uso de la aplicación
 
@@ -85,34 +83,34 @@ Esto levantará un servidor RESTful en `http://localhost:3000` que simula una AP
 
 ### Código clave
 
-- **Crear un personaje**
+- **Mostrar un personaje**
 
   ```javascript
-  function createChamp() {
-      // Código para crear un personaje utilizando fetch y JSON Server
+  function mostrar() {
+      // Código para mostrar un personaje utilizando fetch
   }
   ```
 
-- **Obtener la lista de personajes**
+- **Eliminar personaje**
 
   ```javascript
-  function getChamp() {
-      // Código para obtener la lista de personajes y renderizarla en la interfaz
+  function eliminar(id) {
+      // Código para eliminar un personaje espacifico
   }
   ```
 
-- **Eliminar un personaje**
+- **Capturar personaje del formulario**
 
   ```javascript
-  function deleteChamp(id) {
-      // Código para eliminar un personaje específico
+  function personajeForm(personaje) {
+      // Código para captuar los datos de los inputs del formulario
   }
   ```
   - **Actualizar un personaje**
 
   ```javascript
-  function updateChamp(id) {
-      // Código para eliminar un personaje específico
+  function CrearActualizarItem() {
+      // Código para crear y actualizar un personaje específico
   }
 ```
 

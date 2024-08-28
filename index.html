@@ -1,43 +1,87 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <script src="https://cdn.tailwindcss.com"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-  <div class="container w-full flex justify-center items-center bg-red-100 ">
-    <div id="card" class="card bg-white rounded-2xl min-w-[800px] min-h-96 flex flex-col items-center shadow-2xl">
-      <h1 id="title" class="py-4 text-2xl font-bold animate-jump animate-infinite">Personajes de Marvel</h1>
-      <button id="btnAdd" class="btnUpdate rounded py-4 px-6 bg-green-600 text-white font-bold  flex text-center justify-center my-2">añadir</button>
-      <ul id="champList" class="w-full flex flex-col justify-center items-center">
-        <li class="w-full justify-center items-center flex min-h-12 ">
-          <div class="rounded border w-4/5 min-h-12 flex justify-between p-4">
-            <div class="flex flex-col ">
-              <h3 class="font-bold text-xl">Nombre</h3>
-              <p>Tony Stark</p>
+
+<body class="flex flex-col w-full bg-black items-center">
+
+    <div
+        class="card min-w-[300px] bg-white rounded-2xl flex flex-col justify-center items-center my-12 mx-5 transition transition-all ease-in-out  duration-1000 ">
+        <h1 class="text-black font-bold mt-12 text-3xl">Consumir una API</h1>
+        <div id="searchBard" class="w-full flex justify-center my-12">
+            <input type="text" placeholder="  Buscar" id="inputSearch" class="h-12 w-[80%] rounded-2xl border-2">
+        </div>
+        <button id="btnAdd"
+            class="rounded-2xl  mx-2 py-4 px-6 bg-green-600 text-white font-bold w-[80%] flex text-center justify-center my-8">AÑADIR</button>
+        <form action="submit" id="formCreateUpdate"
+            class="hidden w-[90%] min-w-[390px] p-6 flex flex-col justify-center transition transition-all ease-in-out  duration-1000">
+            <div class="w-full flex flex-col pb-3">
+                <label for="">Nombre</label>
+                <input type="text" class="w-full border-2 h-12 rounded " id="inputName"
+                    placeholder="Nombre de ciudadano">
             </div>
-            <div class="noame">
-              <h3 class="font-bold text-xl">Nombre de heroe</h3>
-              <p>Iron Man</p>
+            <div class="w-full flex flex-col pb-3">
+                <label for="">Alias</label>
+                <input type="text" class="w-full border-2 h-12 rounded " id="inputAlias"
+                    placeholder="Nombre de super heroe">
             </div>
-            <div class="noame">
-              <h3 class="font-bold text-xl">Aparicion</h3>
-              <p>2015</p>
+            <div class="w-full flex flex-col pb-3">
+                <label for="">Aparición</label>
+                <input type="text" class="w-full border-2 h-12 rounded " id="inputAppearance"
+                    placeholder="Donde y en que año">
             </div>
-            <div class="noame">
-              <h3 class="font-bold text-xl">Poderes</h3>
-              <p>Dinero</p>
+            <div class="w-full flex flex-col pb-3">
+                <label for="">Poderes</label>
+                <input type="text" class="w-full border-2 h-12 rounded " id="inputPowers"
+                    placeholder="Poderes que posee">
             </div>
+            <button id="btnSave" type="submit"
+                class="w-full rounded-2xl bg-green-600 text-white font-bold py-4 px-6 my-2">Guardar</button>
+            <button id="btnClose" type="submit"
+                class="w-full rounded-2xl bg-red-600 text-white font-bold py-4 px-6 my-2">Cancelar</button>
+        </form>
+        <ul id="list" class=" w-[90%] transition ease-in-out  duration-1000">
+            <li class="flex flex-col justify-center items-center mb-5 ">
+                <div
+                    class="rounded border w-full max-lg:py-4 min-h-12 flex flex-wrap justify-between p-4 m-4 shadow-md text-center">
+                    <div class="flex flex-col max-lg:w-full lg:w-[25%] gap-5">
+                        <h3 class="font-bold text-md text-center">Nombre</h3>
+                        <p class"">${champ.name}</p>
+                    </div>
+                    <div class="flex flex-col max-lg:w-full lg:w-[25%] gap-5">
+                        <h3 class="font-bold text-md text-center">Nombre de héroe</h3>
+                        <p>${champ.alias}</p>
+                    </div>
+                    <div class="flex flex-col max-lg:w-full lg:w-[25%] gap-5">
+                        <h3 class="font-bold text-md text-center">Aparición</h3>
+                        <p class"">${champ.firstAppearance}</p>
+                    </div>
+                    <div class="flex flex-col max-lg:w-full lg:w-[25%] gap-5">
+                        <h3 class="font-bold text-md text-center">Poderes</h3>
+                        <p class"">poder 1, poder 2, poder 3</p>
+                    </div>
+                    <div class="noame w-full max-lg:py-4 mt-10 justify-center items-center flex ">
+                        <button
+                            class="btnDelete rounded mx-2 py-4 px-6 bg-red-600 text-white font-bold w-full flex text-center justify-center my-2">Borrar</button>
+                        <button
+                            class="btnUpdate rounded mx-2 py-4 px-6 bg-green-600 text-white font-bold w-full flex text-center justify-center my-2">Actualizar</button>
+                    </div>
+                </div>
+            </li>
+
+        </ul>
+        <template id="template-item-col">
+
+        </template>
 
 
-          </div>
-        </li>
-      </ul>
     </div>
-  </div>
-
-  <script src="app.js"></script>
+    <script src="app.js"></script>
 </body>
 
 </html>
